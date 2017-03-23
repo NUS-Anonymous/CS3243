@@ -12,6 +12,11 @@
  *
  */
 public class NextState {
+	
+/*******************************************************************************
+ * 'Deep' copy of class State
+ *******************************************************************************/
+	
 	public static final int COLS = 10;
 	public static final int ROWS = 21;
 	public static final int N_PIECES = 7;
@@ -116,10 +121,6 @@ public class NextState {
 		return lost;
 	}
 	
-	public int getRowsCleared() {
-		return cleared;
-	}
-	
 	public int getTurnNumber() {
 		return turn;
 	}
@@ -212,15 +213,64 @@ public class NextState {
  **************************************************************************************/
 	
 	/**
+	 * This heuristic calculates the total aggregate height of all columns
+	 * This corresponds to feature[0]
+	 * 
+	 * @return the total aggregate height of all columns
+	 */
+	public int getAggregateHeight() {
+		int result = 0;
+		for (int i = 0; i < COLS; i++) {
+			result += top[i];
+		}
+		return result;
+	}
+	
+	/**
+	 * This heuristic calculates the number of rows cleared
+	 * This corresponds to feature[1]
+	 * 
+	 * @return number of rows cleared
+	 */
+	public int getRowsCleared() {
+		return cleared;
+	}
+	
+	/**
+	 * This heuristic calculates the number of holes in the board
+	 * This corresponds to feature[2]
+	 * 
+	 * @return number of holes
+	 */
+	public int getHoles() {
+	    //Number of holes = total height - total grids used
+	    int result;
+	    int totalGrids = 0;
+	    
+	    for (int i = 0; i < ROWS; i++) {
+	        for (int j = 0; j < COLS; j++) {
+	            if(field[i][j] > 0) {
+	                totalGrids++;
+	            }	               
+	        }
+	    }
+	    result = getAggregateHeight() - totalGrids;
+	    return result;
+	    
+	}
+	
+	/**
 	 * This heuristic calculates the absolute height difference between 
 	 * column
+	 * This corresponds to feature[3]
 	 * 
 	 * @return the absolute height difference
 	 */
-	public int calculateMinHeightHeuristic() {
+	public int getHeightDifference() {
 		int result = 0;
-		for (int i = 0; i < COLS-1; i++ )
+		for (int i = 0; i < COLS-1; i++ ) {
 			result += Math.abs(top[i] - top[i+1]);
+		}
 		return result;
 	}
 }
