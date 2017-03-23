@@ -273,4 +273,50 @@ public class NextState {
 		}
 		return result;
 	}
+	
+	/**
+	 * Basically, don't make a losing move 
+	 * 
+	 * @return 1 if lost, 0 if win
+	 */
+	public int isLost() {
+	    if (lost == true) {
+	        return 1;
+	    } else {
+	        return 0;
+	    }
+	}
+	
+	/**
+	 * A bad gap happens when middle column is shorter than adjacent columns 
+	 * by more than 2 gaps
+	 * 
+	 * @return total size of all the bad gaps
+	 */
+	public int getTotalBadGapSize() {
+	    int result = 0;
+	    
+	    int leftDiff = 0;
+        int rightDiff = 0;
+        
+	    for (int i = 1; i < COLS - 1; i++) {
+	        leftDiff = top[i-1] - top[i];
+	        rightDiff = top[i+1] - top[i];
+	        
+	        if ((leftDiff >= 2) && (rightDiff >= 2)) {
+	            result += Math.min(leftDiff, rightDiff);
+	        }
+	    }
+	    
+	    //next to borders
+	    if (top[1] - top[0] >= 2) {
+	        result += top[1] - top[0];
+	    }
+	    
+	    if (top[COLS-2] - top[COLS-1] >= 2) {
+	        result += top[COLS-2] - top[COLS-1];
+	    }
+	    
+	    return result;
+	}
 }
