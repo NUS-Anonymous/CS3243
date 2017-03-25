@@ -12,6 +12,11 @@
  *
  */
 public class NextState {
+	
+/*******************************************************************************
+ * 'Deep' copy of class State
+ *******************************************************************************/
+	
 	public static final int COLS = 10;
 	public static final int ROWS = 21;
 	public static final int N_PIECES = 7;
@@ -116,10 +121,6 @@ public class NextState {
 		return lost;
 	}
 	
-	public int getRowsCleared() {
-		return cleared;
-	}
-	
 	public int getTurnNumber() {
 		return turn;
 	}
@@ -212,15 +213,110 @@ public class NextState {
  **************************************************************************************/
 	
 	/**
+	 * This heuristic calculates the total aggregate height of all columns
+	 * This corresponds to feature[0]
+	 * 
+	 * @return the total aggregate height of all columns
+	 */
+	public int getAggregateHeight() {
+		int result = 0;
+		for (int i = 0; i < COLS; i++) {
+			result += top[i];
+		}
+		return result;
+	}
+	
+	/**
+	 * This heuristic calculates the number of rows cleared
+	 * This corresponds to feature[1]
+	 * 
+	 * @return number of rows cleared
+	 */
+	public int getRowsCleared() {
+		return cleared;
+	}
+	
+	/**
+	 * This heuristic calculates the number of holes in the board
+	 * This corresponds to feature[2]
+	 * 
+	 * @return number of holes
+	 */
+	public int getHoles() {
+	    //Number of holes = total height - total grids used
+	    int result;
+	    int totalGrids = 0;
+	    
+	    for (int i = 0; i < ROWS; i++) {
+	        for (int j = 0; j < COLS; j++) {
+	            if(field[i][j] > 0) {
+	                totalGrids++;
+	            }	               
+	        }
+	    }
+	    result = getAggregateHeight() - totalGrids;
+	    return result;
+	    
+	}
+	
+	/**
 	 * This heuristic calculates the absolute height difference between 
 	 * column
+	 * This corresponds to feature[3]
 	 * 
 	 * @return the absolute height difference
 	 */
-	public int calculateMinHeightHeuristic() {
+	public int getHeightDifference() {
 		int result = 0;
-		for (int i = 0; i < COLS-1; i++ )
+		for (int i = 0; i < COLS-1; i++ ) {
 			result += Math.abs(top[i] - top[i+1]);
+		}
 		return result;
+	}
+	
+	/**
+	 * Basically, don't make a losing move 
+	 * 
+	 * @return 1 if lost, 0 if win
+	 */
+	public int isLost() {
+	    if (lost == true) {
+	        return 1;
+	    } else {
+	        return 0;
+	    }
+	}
+	
+	/**
+	 * A bad gap happens when middle column is shorter than adjacent columns 
+	 * by more than 2 gaps
+	 * 
+	 * @return total size of all the bad gaps
+	 */
+	public int getTotalBadGapSize() {
+	    int result = 0;
+	    
+	    int leftDiff = 0;
+        int rightDiff = 0;
+        
+	    for (int i = 1; i < COLS - 1; i++) {
+	        leftDiff = top[i-1] - top[i];
+	        rightDiff = top[i+1] - top[i];
+	        
+	        if ((leftDiff >= 2) && (rightDiff >= 2)) {
+	            result += Math.min(leftDiff, rightDiff);
+	        }
+	    }
+	    
+	    //next to borders
+	    if (top[1] - top[0] >= 2) {
+	        result += top[1] - top[0];
+	    }
+	    
+	    if (top[COLS-2] - top[COLS-1] >= 2) {
+	        result += top[COLS-2] - top[COLS-1];
+	    }
+	    
+	    return result;
 	}
 }
