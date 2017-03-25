@@ -11,11 +11,17 @@ public class PlayerSkeleton {
 	 * feature[5] - total bad gaps (that only the longest 4-length piece can fit it)
 	 */
 	public int[] feature = new int[6];
-	
 	//the linear weight for each feature, set others to 0 to test the correctness
 	//numbers or rows cleared should have negative weights, cuz we want to award this
 	public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  0.1, 100000};
 	
+	
+	/*Set Weight method to adjust the weight for training*/
+	public void setWeight(double[] weights){
+		//the linear weight for each feature, set others to 0 to test the correctness
+		//numbers or rows cleared should have negative weights, cuz we want to award this
+		weight = weights;
+	}
 	/**
 	 * We generate all possible moves for the current piece
 	 * Calculate the weighted heuristic value of the field after we make the move
@@ -65,6 +71,9 @@ public class PlayerSkeleton {
 	    
 	    return value;
 	}
+	public double[] getFeatureWeights(){
+		return weight;
+	}
 
 	
 	public static void main(String[] args) {
@@ -82,5 +91,6 @@ public class PlayerSkeleton {
 //			}
 		}
 		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+		
 	}	
 }
