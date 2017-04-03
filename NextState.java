@@ -275,19 +275,6 @@ public class NextState {
 	}
 	
 	/**
-	 * Basically, don't make a losing move 
-	 * 
-	 * @return 1 if lost, 0 if win
-	 */
-	public int isLost() {
-	    if (lost == true) {
-	        return 1;
-	    } else {
-	        return 0;
-	    }
-	}
-	
-	/**
 	 * A bad gap happens when middle column is shorter than adjacent columns 
 	 * by more than 2 gaps
 	 * 
@@ -319,4 +306,18 @@ public class NextState {
 	    
 	    return result;
 	}
+	
+	   
+    /**
+     * Basically, don't make a losing move 
+     * 
+     * @return 1 if lost, 0 if win
+     */
+    public int isLost() {
+        if (lost == true) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

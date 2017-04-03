@@ -7,14 +7,16 @@ public class PlayerSkeleton {
 	 * feature[1] - rows cleared
 	 * feature[2] - holes
 	 * feature[3] - absolute height difference between columns (bumpiness)
-	 * feature[4] - is lost?
-	 * feature[5] - total bad gaps (that only the longest 4-length piece can fit it)
+	 * feature[4] - total bad gaps (that only the longest 4-length piece can fit it)
+	 * feature[5] - is lost?
 	 */
-	public int[] feature = new int[6];
+    
+    public int NUM_OF_HEURISTICS = 6; 
+	public int[] feature = new int[NUM_OF_HEURISTICS];
 	
 	//the linear weight for each feature, set others to 0 to test the correctness
 	//numbers or rows cleared should have negative weights, cuz we want to award this
-	public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  0.1, 100000};
+	public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  100000, 0.1};
 	
 	/**
 	 * We generate all possible moves for the current piece
@@ -56,10 +58,10 @@ public class PlayerSkeleton {
 		feature[1] = s.getRowsCleared();
 		feature[2] = s.getHoles();
 		feature[3] = s.getHeightDifference();
-		feature[4] = s.getTotalBadGapSize();
-		feature[5] = s.isLost();
+		feature[4] = s.isLost();
+		feature[5] = s.getTotalBadGapSize();
 	
-	    for (int i = 0; i < 6; i++) {
+	    for (int i = 0; i < NUM_OF_HEURISTICS; i++) {
 	        value += weight[i] * feature[i]; 
 		}
 	    
