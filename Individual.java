@@ -29,12 +29,22 @@ public class Individual {
         return replica;
     }
     
+    /**
+     * Generate a random Individual
+     * 
+     * @return random Individual
+     */
     public Individual generateRandom() {
         Individual random = new Individual();
-        for (int i = 0; i < size; i++) {
-            double randomVal = (Math.random() - 0.5) * 100;
-            weight[i] = randomVal;
-        }
+        //the 1st, 3rd, 4th, 5th heuristics should be positive
+        //the 2nd should be negative
+        //WE DON'T TRAIN isLost() heuristic in GA
+        weight[0] = (Math.random()) * 100;
+        weight[2] = (Math.random()) * 100;
+        weight[3] = (Math.random()) * 100;
+        weight[4] = (Math.random()) * 100;
+        weight[1] = (Math.random()) * (-100);
+        weight[5] = 10000;
         player = new PlayerSkeleton();
         player.setWeightVector(weight);
         return random;

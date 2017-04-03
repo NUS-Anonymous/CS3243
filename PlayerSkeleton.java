@@ -16,7 +16,7 @@ public class PlayerSkeleton {
 	
 	//the linear weight for each feature, set others to 0 to test the correctness
 	//numbers or rows cleared should have negative weights, cuz we want to award this
-	public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  100000, 0.1};
+	public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  0.13123, 10000};
 	
 	/**
 	 * Set the weight vector for the player
@@ -73,8 +73,8 @@ public class PlayerSkeleton {
 		feature[1] = s.getRowsCleared();
 		feature[2] = s.getHoles();
 		feature[3] = s.getHeightDifference();
-		feature[4] = s.isLost();
-		feature[5] = s.getTotalBadGapSize();
+		feature[4] = s.getTotalBadGapSize();
+		feature[5] = s.isLost();
 	
 	    for (int i = 0; i < NUM_OF_HEURISTICS; i++) {
 	        value += weight[i] * feature[i]; 
