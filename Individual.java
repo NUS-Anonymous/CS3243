@@ -84,5 +84,13 @@ public class Individual {
         } 
         return fitness;
     }
+    
+    /**
+     * Reset the game for this Individual, after 1 generation is done
+     */
+    public void reset() {
+        player = null;
+        fitness = -1;
+    }
        
 }
