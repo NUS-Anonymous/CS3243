@@ -11,13 +11,28 @@ public class PlayerSkeleton {
 	 * feature[5] - is lost?
 	 */
     
-    public int NUM_OF_HEURISTICS = 6; 
+    public static final int NUM_OF_HEURISTICS = 6; 
 	public int[] feature = new int[NUM_OF_HEURISTICS];
 	
 	//the linear weight for each feature, set others to 0 to test the correctness
 	//numbers or rows cleared should have negative weights, cuz we want to award this
 	public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  100000, 0.1};
 	
+	/**
+	 * Set the weight vector for the player
+	 * @param weight
+	 */
+    public void setWeightVector(double[] weight){
+        for (int i = 0 ; i < NUM_OF_HEURISTICS; i++ ){
+            this.weight[i] = weight[i];
+        }
+    }
+
+    /**
+     * Empty Constructor
+     */
+    public PlayerSkeleton() {}
+    
 	/**
 	 * We generate all possible moves for the current piece
 	 * Calculate the weighted heuristic value of the field after we make the move
@@ -68,6 +83,19 @@ public class PlayerSkeleton {
 	    return value;
 	}
 
+	/**
+	 * Run the game
+	 * @return number of rows cleared
+	 */
+    public int run(){
+        State s = new State();
+        
+        while(!s.hasLost()) {
+            s.makeMove(this.pickMove(s,s.legalMoves()));
+        }
+        
+        return s.getRowsCleared();
+    }	
 	
 	public static void main(String[] args) {
 		State s = new State();
