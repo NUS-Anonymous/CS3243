@@ -22,7 +22,7 @@ public class Population {
     public Population() {
         population = new Individual[POPULATION_SIZE];
         
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < POPULATION_SIZE; i++) {
             Individual random = new Individual();
             random.generateRandom();
             population[i] = random;
