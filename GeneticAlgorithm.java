@@ -61,5 +61,31 @@ public class GeneticAlgorithm {
         second.reset();
     }
     
-    
+    /**
+     * Uniform mutation scheme
+     * Again, we don't mutate isLost()
+     * 
+     * @param individual
+     */
+    public void mutate(Individual individual) {
+        //loop through gene and mutate with some 
+        double weight;
+        boolean flag = false; //has the individual been mutated
+        for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
+            if (Math.random() <= MUTATION_RATE) {
+                if (i == 1) {
+                    weight = Math.random() * (-100);
+                } else {
+                    weight = Math.random() * 100;
+                }
+                individual.setWeight(i, weight);
+                flag = true;
+            }
+        }
+        
+        //reset the old player, if it has been mutated
+        if (flag) {
+            individual.reset();
+        }
+    }
 }
