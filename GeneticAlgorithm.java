@@ -116,10 +116,10 @@ public class GeneticAlgorithm {
         //select and crossover then put them in nextPopulation (first 40)
         for (int i = 0; i < TOURNAMENT_NUMBERS; i+=2) {
             Individual first = new Individual();
-            first.replicate(select(population));
+            first = first.replicate(select(population));
             
             Individual second = new Individual();
-            second.replicate(select(population));
+            second = second.replicate(select(population));
             
             crossOver(first, second);
             nextPopulation.setIndividual(first, i);
