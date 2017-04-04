@@ -95,4 +95,13 @@ public class Population {
     public Individual getIndividual(int i) {
         return population[i];
     }
+    
+    /**
+     * Get size of population (getter method
+     * 
+     * @return size of population
+     */
+    public int getSize() {
+        return population.length;
+    }
 }
