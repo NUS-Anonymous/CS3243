@@ -38,4 +38,6 @@ public class GeneticAlgorithm {
         //return the fittest in the tournament
         return tournament.getFittest();        
     }
+    
+    
 }
