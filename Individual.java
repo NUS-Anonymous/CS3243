@@ -4,7 +4,7 @@
  * Using the weight vector, plays the game
  * The fitness function is number of rows cleared after the game.
  */
-public class Individual implements Runnable {
+public class Individual implements Runnable, Comparable<Individual> {
 
     //the weight vector
     private static final int size = PlayerSkeleton.NUM_OF_HEURISTICS;
@@ -101,6 +101,12 @@ public class Individual implements Runnable {
     //Runnable thread method
     public void run() {
         getFitness();
+    }
+
+    @Override
+    //comparable method
+    public int compareTo(Individual o) {
+        return this.getFitness() - o.getFitness(); //prevent fitness == -1
     }
 
 }

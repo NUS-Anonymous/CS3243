@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * 
  * Population in GA
@@ -74,6 +76,10 @@ public class Population {
         }
         
         return fittest;
+    }
+    
+    public void sort() {
+        Arrays.sort(population);
     }
     
     /**

@@ -13,7 +13,7 @@
 public class GeneticAlgorithm {
     
     //GA parameters
-    private static final int TOURNAMENT_NUMBERS = 30; //Run 30 tournaments
+    private static final int TOURNAMENT_NUMBERS = 40; //Run 40 tournaments
     private static final int TOURNAMENT_SIZE = 5; //5 individuals are chosen for each tournament
     private static final double UNIFORM_RATE = 0.5; //uniform crossover
     private static final double MUTATION_RATE = 0.05; //uniform mutation
@@ -93,4 +93,51 @@ public class GeneticAlgorithm {
             individual.reset();
         }
     }
+    
+    /**
+     * Piece together the above 3 algorithms: select, crossOver and mutate
+     * to get the next population.
+     * 
+     * In one generations of 50 individuals, we keep the best 10,
+     * eliminate the worst 40, substitute it with 40 tournament winners
+     * (the whole original population gets to participate in the tournament :D)
+     * 
+     * Do we mutate the 10 we keep? No. In real life, there is no mutation if there's no 
+     * *mating* involved
+     * 
+     * @param population - current population
+     * 
+     * @return next generation population
+     */
+    public Population getNextGeneration(Population population) {
+        int size = population.getSize();
+        Population nextPopulation = new Population(size);
+        
+        //select and crossover then put them in nextPopulation (first 40)
+        for (int i = 0; i < TOURNAMENT_NUMBERS; i+=2) {
+            Individual first = new Individual();
+            first.replicate(select(population));
+            
+            Individual second = new Individual();
+            second.replicate(select(population));
+            
+            crossOver(first, second);
+            nextPopulation.setIndividual(first, i);
+            nextPopulation.setIndividual(second, i+1);
+        }
+        
+        //get the 10 fittest from the original population to put in next population
+        population.sort();
+        for (int i = TOURNAMENT_NUMBERS; i < size; i++) {
+            nextPopulation.setIndividual(population.getIndividual(i), i);
+        }
+        
+        //mutation process, do not mutate the last 10 from original population
+        for (int i = 0; i < TOURNAMENT_NUMBERS; i++) {
+            mutate(nextPopulation.getIndividual(i));
+        }
+        
+        return nextPopulation;
+    }
+    
 }
