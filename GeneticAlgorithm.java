@@ -39,5 +39,27 @@ public class GeneticAlgorithm {
         return tournament.getFittest();        
     }
     
+    /**
+     * Uniform cross-over scheme to cross the features between 2 individuals
+     * However, WE DO NOT CARE about isLost() (last heuristic).
+     * 
+     * @param first - Individual
+     * @param second - Individual
+     */
+    public void crossOver(Individual first, Individual second) {
+        //loop through heuristic features, ignore last one
+        for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
+            //uniform cross-over, swap 2 weights
+            if (Math.random() <= UNIFORM_RATE) {
+                double temp = first.getWeight(i);
+                first.setWeight(i, second.getWeight(i));
+                second.setWeight(i, temp);
+            }
+        }
+        //reset the old players
+        first.reset();
+        second.reset();
+    }
+    
     
 }
