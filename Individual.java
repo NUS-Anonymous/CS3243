@@ -4,10 +4,10 @@
  * Using the weight vector, plays the game
  * The fitness function is number of rows cleared after the game.
  */
-public class Individual {
+public class Individual implements Comparable<Individual>, Runnable {
     
     //the weight vector
-    private static int size = PlayerSkeleton.NUM_OF_HEURISTICS;
+    private static final int size = PlayerSkeleton.NUM_OF_HEURISTICS;
     private double[] weight = new double[size];
     
     //the player and the fitness, after the game runs once.
@@ -91,6 +91,18 @@ public class Individual {
     public void reset() {
         player = null;
         fitness = -1;
+    }
+
+    @Override
+    //Runnable thread method
+    public void run() {
+        getFitness();
+    }
+
+    @Override
+    //Comparable method, natural ordering based on fitness value
+    public int compareTo(Individual o) {
+        return this.getFitness() - o.getFitness(); //to ensure the game has been run. 
     }
        
 }
