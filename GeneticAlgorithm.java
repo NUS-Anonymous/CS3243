@@ -140,4 +140,17 @@ public class GeneticAlgorithm {
         return nextPopulation;
     }
     
+    /**
+     * Run the learning process
+     */
+    public void learn() {
+        //create an initial random population
+        Population population = new Population();
+        
+        //run until the fittest in the generation clear 10 million points
+        while (population.getFittest().getFitness() < 10000000) {
+            population = getNextGeneration(population);
+            System.out.println(population.getFittest());
+        }
+    }
 }

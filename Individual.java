@@ -96,6 +96,19 @@ public class Individual implements Runnable, Comparable<Individual> {
         player = null;
         fitness = -1;
     }
+    
+    /**
+     * toString method
+     * String representation is the weights
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            sb.append(weight[i]);
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
 
     @Override
     //Runnable thread method

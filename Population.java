@@ -78,6 +78,9 @@ public class Population {
         return fittest;
     }
     
+    /**
+     * Sort the population by its fitness in increasing order
+     */
     public void sort() {
         Arrays.sort(population);
     }
