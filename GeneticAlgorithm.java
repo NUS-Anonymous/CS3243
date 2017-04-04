@@ -47,6 +47,8 @@ public class GeneticAlgorithm {
      * @param second - Individual
      */
     public void crossOver(Individual first, Individual second) {
+        boolean flag = false; //has the individual been cross-over'ed
+        
         //loop through heuristic features, ignore last one
         for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
             //uniform cross-over, swap 2 weights
@@ -54,11 +56,14 @@ public class GeneticAlgorithm {
                 double temp = first.getWeight(i);
                 first.setWeight(i, second.getWeight(i));
                 second.setWeight(i, temp);
+                flag = true;
             }
         }
-        //reset the old players
-        first.reset();
-        second.reset();
+        //reset the old players, if they have been cross-over'ed
+        if (flag) {
+            first.reset();
+            second.reset();
+        }
     }
     
     /**
