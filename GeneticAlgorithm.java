@@ -146,11 +146,21 @@ public class GeneticAlgorithm {
     public void learn() {
         //create an initial random population
         Population population = new Population();
+        int round = 0;
         
+        final long startTime = System.currentTimeMillis();
         //run until the fittest in the generation clear 10 million points
         while (population.getFittest().getFitness() < 10000000) {
+            round++;
+            System.out.println("Round " + round + ": The fittest is ");
             population = getNextGeneration(population);
             System.out.println(population.getFittest());
+            System.out.println(population.getFittest().getFitness());
+            System.out.println();
         }
+        
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Total execution time: " + (endTime - startTime) );
+        System.out.println("Total rounds: " + round);
     }
 }
