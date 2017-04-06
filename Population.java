@@ -87,6 +87,15 @@ public class Population {
     }
     
     /**
+     * Reset all individuals in the population
+     */
+    public void reset() {
+        for (int i = 0; i < population.length; i++) {
+            population[i].reset();
+        }
+    }
+    
+    /**
      * Set the individual (setter method)
      * 
      * @param individual - to be set

@@ -15,12 +15,14 @@ public class GeneticAlgorithm {
     //GA parameters
 
     private static final int POPULATION_SIZE = 50;
-    private static final int TOURNAMENT_NUMBERS = 30; //Run 40 tournaments
-    private static final int NEW_CONTESTANTS = 15; //Add 10 new random contestants
+    private static final int CITIZENS = 50;          //number of normal citizens
+    private static final int FOREIGNERS = 0;         //number of foreigners
+    //number of elites = 50 - citizens - foreigners   
+    private static final int TOURNAMENT_SIZE = 3; 
 
-    private static final int TOURNAMENT_SIZE = 5; //5 individuals are chosen for each tournament
+    private static final double CROSSOVER_RATE = 0.5; //crossover rate
     private static final double UNIFORM_RATE = 0.5; //uniform crossover
-    private static final double MUTATION_RATE = 0.05; //uniform mutation
+    private static final double MUTATION_RATE = 0.02; //uniform mutation
 
     //true if first time running, false if you already have an population
     //from previous run
@@ -55,22 +57,17 @@ public class GeneticAlgorithm {
      * @param second - Individual
      */
     public void crossOver(Individual first, Individual second) {
-        boolean flag = false; //has the individual been cross-over'ed
 
-        //loop through heuristic features, ignore last one
-        for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
-            //uniform cross-over, swap 2 weights
-            if (Math.random() <= UNIFORM_RATE) {
-                double temp = first.getWeight(i);
-                first.setWeight(i, second.getWeight(i));
-                second.setWeight(i, temp);
-                flag = true;
+        if (Math.random() <= CROSSOVER_RATE) {
+            //loop through heuristic features, ignore last one
+            for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
+                //uniform cross-over, swap 2 weights
+                if (Math.random() <= UNIFORM_RATE) {
+                    double temp = first.getWeight(i);
+                    first.setWeight(i, second.getWeight(i));
+                    second.setWeight(i, temp);                
+                }
             }
-        }
-        //reset the old players, if they have been cross-over'ed
-        if (flag) {
-            first.reset();
-            second.reset();
         }
     }
 
@@ -83,7 +80,6 @@ public class GeneticAlgorithm {
     public void mutate(Individual individual) {
         //loop through gene and mutate with some 
         double weight;
-        boolean flag = false; //has the individual been mutated
         for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
             if (Math.random() <= MUTATION_RATE) {
                 if (i == 1) {
@@ -92,13 +88,7 @@ public class GeneticAlgorithm {
                     weight = Math.random() * 100;
                 }
                 individual.setWeight(i, weight);
-                flag = true;
             }
-        }
-
-        //reset the old player, if it has been mutated
-        if (flag) {
-            individual.reset();
         }
     }
 
@@ -122,7 +112,7 @@ public class GeneticAlgorithm {
         Population nextPopulation = new Population(size);
 
         //select and crossover then put them in nextPopulation (first 40)
-        for (int i = 0; i < TOURNAMENT_NUMBERS; i+=2) {
+        for (int i = 0; i < CITIZENS; i+=2) {
             Individual first = new Individual();
             first = first.replicate(select(population));
 
@@ -134,24 +124,24 @@ public class GeneticAlgorithm {
             nextPopulation.setIndividual(second, i+1);
         }
 
-        
-        //introduce 10 new random contestants
-        for (int i = TOURNAMENT_NUMBERS; i < TOURNAMENT_NUMBERS + NEW_CONTESTANTS; i++) {
-        	Individual newGuy = new Individual();
-        	nextPopulation.setIndividual(newGuy.generateRandom(), i);
-        }
-
-        //get the 10 fittest from the original population to put in next population
-        population.sort();
-        for (int i = TOURNAMENT_NUMBERS + NEW_CONTESTANTS; i < size; i++) {
-            nextPopulation.setIndividual(population.getIndividual(i), i);
-        }
-
-        //mutation process, do not mutate the last 10 from original population
-        for (int i = 0; i < TOURNAMENT_NUMBERS + NEW_CONTESTANTS; i++) {
+        //mutation process, we don't mutate foreigners and elites
+        for (int i = 0; i < CITIZENS; i++) {
             mutate(nextPopulation.getIndividual(i));
         }
 
+        //foreigners
+        for (int i = CITIZENS; i < CITIZENS + FOREIGNERS; i++) {
+            Individual newGuy = new Individual();
+            nextPopulation.setIndividual(newGuy.generateRandom(), i);
+        }
+
+        //elites
+        population.sort();
+        for (int i = CITIZENS + FOREIGNERS; i < size; i++) {
+            nextPopulation.setIndividual(population.getIndividual(i), i);
+        }
+
+        nextPopulation.reset();        
         return nextPopulation;
     }
 
