@@ -82,11 +82,13 @@ public class Individual implements Runnable, Comparable<Individual> {
      */
     public int getFitness() {
         if (player == null || fitness == -1) { //if the game has not been played, play it
-            player = new PlayerSkeleton();
-            player.setWeightVector(weight);
-            fitness = player.run();
+        	for (int i = 0; i < 2; i++) {
+        		player = new PlayerSkeleton();
+        		player.setWeightVector(weight);
+                fitness += player.run();
+            }
         } 
-        return fitness;
+        return fitness/2;
     }
 
     /**
