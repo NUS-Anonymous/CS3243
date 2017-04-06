@@ -82,12 +82,9 @@ public class Individual implements Runnable, Comparable<Individual> {
      */
     public int getFitness() {
         if (player == null || fitness == -1) { //if the game has not been played, play it
-
-        	for (int i = 0; i < 2; i++) {
-        		player = new PlayerSkeleton();
-        		player.setWeightVector(weight);
-                fitness += player.run();
-            }
+            player = new PlayerSkeleton();
+            player.setWeightVector(weight);
+            fitness += player.run();
 
         } 
         return fitness;
@@ -100,7 +97,7 @@ public class Individual implements Runnable, Comparable<Individual> {
         player = null;
         fitness = -1;
     }
-    
+
     /**
      * toString method
      * String representation is the weights
@@ -113,7 +110,7 @@ public class Individual implements Runnable, Comparable<Individual> {
         }
         return sb.toString();
     }
-    
+
     public void importFromFile(String s) {
         String[] weightString = s.split("\\s+"); //split by whitespace
         if (weightString.length != size) {

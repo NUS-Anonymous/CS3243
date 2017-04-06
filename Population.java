@@ -14,9 +14,6 @@ public class Population {
     //population size
     private static final int POPULATION_SIZE = 50;
     
-    //number of heuristic features
-    private static final int size = PlayerSkeleton.NUM_OF_HEURISTICS;
-    
     //Arrays of Individuals
     private Individual[] population;
     
