@@ -13,8 +13,11 @@
 public class GeneticAlgorithm {
 
     //GA parameters
+
     private static final int POPULATION_SIZE = 50;
-    private static final int TOURNAMENT_NUMBERS = 40; //Run 40 tournaments
+    private static final int TOURNAMENT_NUMBERS = 30; //Run 40 tournaments
+    private static final int NEW_CONTESTANTS = 15; //Add 10 new random contestants
+
     private static final int TOURNAMENT_SIZE = 5; //5 individuals are chosen for each tournament
     private static final double UNIFORM_RATE = 0.5; //uniform crossover
     private static final double MUTATION_RATE = 0.05; //uniform mutation
@@ -131,14 +134,21 @@ public class GeneticAlgorithm {
             nextPopulation.setIndividual(second, i+1);
         }
 
+        
+        //introduce 10 new random contestants
+        for (int i = TOURNAMENT_NUMBERS; i < TOURNAMENT_NUMBERS + NEW_CONTESTANTS; i++) {
+        	Individual newGuy = new Individual();
+        	nextPopulation.setIndividual(newGuy.generateRandom(), i);
+        }
+
         //get the 10 fittest from the original population to put in next population
         population.sort();
-        for (int i = TOURNAMENT_NUMBERS; i < size; i++) {
+        for (int i = TOURNAMENT_NUMBERS + NEW_CONTESTANTS; i < size; i++) {
             nextPopulation.setIndividual(population.getIndividual(i), i);
         }
 
         //mutation process, do not mutate the last 10 from original population
-        for (int i = 0; i < TOURNAMENT_NUMBERS; i++) {
+        for (int i = 0; i < TOURNAMENT_NUMBERS + NEW_CONTESTANTS; i++) {
             mutate(nextPopulation.getIndividual(i));
         }
 
