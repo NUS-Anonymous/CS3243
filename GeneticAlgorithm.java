@@ -11,13 +11,18 @@
  * 4. Piece together the above processes to run GA
  */
 public class GeneticAlgorithm {
-    
+
     //GA parameters
+    private static final int POPULATION_SIZE = 50;
     private static final int TOURNAMENT_NUMBERS = 40; //Run 40 tournaments
     private static final int TOURNAMENT_SIZE = 5; //5 individuals are chosen for each tournament
     private static final double UNIFORM_RATE = 0.5; //uniform crossover
     private static final double MUTATION_RATE = 0.05; //uniform mutation
-    
+
+    //true if first time running, false if you already have an population
+    //from previous run
+    private boolean isFirstTime = true;
+
     /**
      * Deterministic Tournament Selection
      * 
@@ -29,16 +34,16 @@ public class GeneticAlgorithm {
     public Individual select(Population population) {
         //Create a new tournament population and fill it with random Individual from population
         Population tournament = new Population(TOURNAMENT_SIZE);
-        
+
         for (int i = 0; i < TOURNAMENT_SIZE; i++) {
             int rand = (int) (Math.random() * population.getSize());
             tournament.setIndividual(population.getIndividual(rand), i);
         }
-        
+
         //return the fittest in the tournament
         return tournament.getFittest();        
     }
-    
+
     /**
      * Uniform cross-over scheme to cross the features between 2 individuals
      * However, WE DO NOT CARE about isLost() (last heuristic).
@@ -48,7 +53,7 @@ public class GeneticAlgorithm {
      */
     public void crossOver(Individual first, Individual second) {
         boolean flag = false; //has the individual been cross-over'ed
-        
+
         //loop through heuristic features, ignore last one
         for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
             //uniform cross-over, swap 2 weights
@@ -65,7 +70,7 @@ public class GeneticAlgorithm {
             second.reset();
         }
     }
-    
+
     /**
      * Uniform mutation scheme
      * Again, we don't mutate isLost()
@@ -87,13 +92,13 @@ public class GeneticAlgorithm {
                 flag = true;
             }
         }
-        
+
         //reset the old player, if it has been mutated
         if (flag) {
             individual.reset();
         }
     }
-    
+
     /**
      * Piece together the above 3 algorithms: select, crossOver and mutate
      * to get the next population.
@@ -112,42 +117,50 @@ public class GeneticAlgorithm {
     public Population getNextGeneration(Population population) {
         int size = population.getSize();
         Population nextPopulation = new Population(size);
-        
+
         //select and crossover then put them in nextPopulation (first 40)
         for (int i = 0; i < TOURNAMENT_NUMBERS; i+=2) {
             Individual first = new Individual();
             first = first.replicate(select(population));
-            
+
             Individual second = new Individual();
             second = second.replicate(select(population));
-            
+
             crossOver(first, second);
             nextPopulation.setIndividual(first, i);
             nextPopulation.setIndividual(second, i+1);
         }
-        
+
         //get the 10 fittest from the original population to put in next population
         population.sort();
         for (int i = TOURNAMENT_NUMBERS; i < size; i++) {
             nextPopulation.setIndividual(population.getIndividual(i), i);
         }
-        
+
         //mutation process, do not mutate the last 10 from original population
         for (int i = 0; i < TOURNAMENT_NUMBERS; i++) {
             mutate(nextPopulation.getIndividual(i));
         }
-        
+
         return nextPopulation;
     }
-    
+
+
     /**
      * Run the learning process
      */
     public void learn() {
-        //create an initial random population
-        Population population = new Population();
+        Population population;
+        if (isFirstTime) {
+            //create an initial random population
+            population = new Population();        
+        } else {
+            population = new Population(POPULATION_SIZE);
+            //initilialize population from data.txt. Change the file to the file you want
+            population.importFromFile("data10.txt");
+        }
+
         int round = 0;
-        
         final long startTime = System.currentTimeMillis();
         //run until the fittest in the generation clear 10 million points
         while (population.getFittest().getFitness() < 10000000) {
@@ -157,8 +170,14 @@ public class GeneticAlgorithm {
             System.out.println(population.getFittest());
             System.out.println(population.getFittest().getFitness());
             System.out.println();
+
+            //export to file every 10 rounds, so we can resume later if needed
+            //can change the frequency
+            if (round % 10 == 0) {
+                population.exportToFile("data" + round + ".txt");
+            }
         }
-        
+
         final long endTime = System.currentTimeMillis();
         System.out.println("Total execution time: " + (endTime - startTime) );
         System.out.println("Total rounds: " + round);

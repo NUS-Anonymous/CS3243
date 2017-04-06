@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 /**
@@ -93,6 +97,39 @@ public class Population {
      */
     public void setIndividual(Individual individual, int i) {
         population[i] = individual;
+    }
+    
+    /**
+     * Export the population to a text file as a String
+     * This is so we can resume learning anytime we want
+     */
+    public void exportToFile(String filePath) {
+        try (PrintWriter out = new PrintWriter(filePath);) {          
+            for (int i = 0; i < population.length; i++) {
+                out.println(population[i].toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Import the population from a String and initialize the population
+     * This is so we can resume learning anytime we want
+     */
+    public void importFromFile(String filePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            int i = 0;
+            while ((line = br.readLine()) != null) {
+                Individual individual = new Individual();
+                individual.importFromFile(line);
+                population[i] = individual;
+                i++;
+             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
