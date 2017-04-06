@@ -49,3 +49,8 @@ Temporary Items
 /Individual.class
 /Population.class
 /GeneticAlgorithm.class
+/PlayerSkeleton.class
+/State.class
+/TFrame.class
+/TLabel.class
+*.txt

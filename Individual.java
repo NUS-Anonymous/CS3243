@@ -82,13 +82,15 @@ public class Individual implements Runnable, Comparable<Individual> {
      */
     public int getFitness() {
         if (player == null || fitness == -1) { //if the game has not been played, play it
+
         	for (int i = 0; i < 2; i++) {
         		player = new PlayerSkeleton();
         		player.setWeightVector(weight);
                 fitness += player.run();
             }
+
         } 
-        return fitness/2;
+        return fitness;
     }
 
     /**
@@ -110,6 +112,18 @@ public class Individual implements Runnable, Comparable<Individual> {
             sb.append(" ");
         }
         return sb.toString();
+    }
+    
+    public void importFromFile(String s) {
+        String[] weightString = s.split("\\s+"); //split by whitespace
+        if (weightString.length != size) {
+            throw new IllegalArgumentException("Not the correct String for Weight Vector");
+        }
+        for (int i = 0; i < size; i++) {
+            weight[i] = Double.parseDouble(weightString[i]);
+        }
+        player = new PlayerSkeleton();
+        player.setWeightVector(weight);
     }
 
     @Override

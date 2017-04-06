@@ -106,7 +106,7 @@ public class PlayerSkeleton {
             GA.learn();
         } else {
             State s = new State();
-            new TFrame(s);
+//          new TFrame(s);
             PlayerSkeleton p = new PlayerSkeleton();
             while(!s.hasLost()) {
                 s.makeMove(p.pickMove(s,s.legalMoves()));
