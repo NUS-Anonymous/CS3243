@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class Population {
 
     //population size
-    private static final int POPULATION_SIZE = 50;
+    private static final int POPULATION_SIZE = 100;
     
     //Arrays of Individuals
     private Individual[] population;

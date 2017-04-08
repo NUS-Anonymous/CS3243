@@ -14,8 +14,8 @@ public class GeneticAlgorithm {
 
     //GA parameters
 
-    private int POPULATION_SIZE = 50;
-    private int CITIZENS = 50;          //number of normal citizens
+    private int POPULATION_SIZE = 100;
+    private int CITIZENS = 100;          //number of normal citizens
     private int FOREIGNERS = 0;         //number of foreigners
     private int ELITES = 0;             //number of elites  
     private int TOURNAMENT_SIZE = 3; 
