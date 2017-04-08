@@ -14,15 +14,15 @@ public class GeneticAlgorithm {
 
     //GA parameters
 
-    private static final int POPULATION_SIZE = 50;
-    private static final int CITIZENS = 50;          //number of normal citizens
-    private static final int FOREIGNERS = 0;         //number of foreigners
-    //number of elites = 50 - citizens - foreigners   
-    private static final int TOURNAMENT_SIZE = 3; 
+    private int POPULATION_SIZE = 50;
+    private int CITIZENS = 50;          //number of normal citizens
+    private int FOREIGNERS = 0;         //number of foreigners
+    private int ELITES = 0;             //number of elites  
+    private int TOURNAMENT_SIZE = 3; 
 
-    private static final double CROSSOVER_RATE = 0.5; //crossover rate
-    private static final double UNIFORM_RATE = 0.5; //uniform crossover
-    private static final double MUTATION_RATE = 0.02; //uniform mutation
+    private double CROSSOVER_RATE = 0.65; //crossover rate
+    private double UNIFORM_RATE = 0.5; //uniform crossover
+    private double MUTATION_RATE = 0.015; //uniform mutation
 
     //true if first time running, false if you already have an population
     //from previous run
@@ -166,6 +166,9 @@ public class GeneticAlgorithm {
         while (population.getFittest().getFitness() < 10000000) {
             round++;
             System.out.println("Round " + round + ": The fittest is ");
+            
+            assert(CITIZENS+FOREIGNERS+ELITES == POPULATION_SIZE);
+            
             population = getNextGeneration(population);
             System.out.println(population.getFittest());
             System.out.println(population.getFittest().getFitness());
