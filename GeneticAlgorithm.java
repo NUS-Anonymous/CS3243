@@ -83,9 +83,9 @@ public class GeneticAlgorithm {
         for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
             if (Math.random() <= MUTATION_RATE) {
                 if (i == 1) {
-                    weight = Math.random() * (-100);
+                    weight = Math.random() * (-1000);
                 } else {
-                    weight = Math.random() * 100;
+                    weight = Math.random() * 1000;
                 }
                 individual.setWeight(i, weight);
             }

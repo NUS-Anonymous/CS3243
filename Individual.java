@@ -42,9 +42,9 @@ public class Individual implements Runnable, Comparable<Individual> {
         double value;
         for (int i = 0; i < size-1; i++) {
             if (i == 1) {
-                value = Math.random() * (-50);
+                value = Math.random() * (-100);
             } else {
-                value = Math.random() * 50;
+                value = Math.random() * 100;
             }
             weight[i] = value;
         }
