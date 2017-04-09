@@ -19,7 +19,7 @@ public class PlayerSkeleton {
 
     //the linear weight for each feature, set others to 0 to test the correctness
     //numbers or rows cleared should have negative weights, cuz we want to award this
-    public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  0.13123, 10000};
+    public double[] weight = {90.90852611640668, -63.98951200033912, 75.75193395415442, 20.213603403414176, 20.553977490848908, 99999.0 };
 
     /**
      * Set the weight vector for the player
@@ -87,14 +87,16 @@ public class PlayerSkeleton {
     }
 
     /**
-     * Run the game
-     * @return number of rows cleared
+     * Run the game, capped at 500 moves
+     * @return number of rows cleared 
      */
-    public int run(){
+    public int run500(){
         State s = new State();
 
-        while(!s.hasLost()) {
+        int move = 0;
+        while(move < 500 && !s.hasLost()) {
             s.makeMove(this.pickMove(s,s.legalMoves()));
+            move++;
         }
 
         return s.getRowsCleared();

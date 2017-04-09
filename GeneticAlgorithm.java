@@ -14,15 +14,12 @@ public class GeneticAlgorithm {
 
     //GA parameters
 
-    private int POPULATION_SIZE = 100;
+    private int POPULATION_SIZE = 200;
     private int CITIZENS = 100;          //number of normal citizens
-    private int FOREIGNERS = 0;         //number of foreigners
-    private int ELITES = 0;             //number of elites  
-    private int TOURNAMENT_SIZE = 3; 
+    private int ELITES = 100;             //number of elites  
+    private int TOURNAMENT_SIZE = 15; 
 
-    private double CROSSOVER_RATE = 0.65; //crossover rate
-    private double UNIFORM_RATE = 0.5; //uniform crossover
-    private double MUTATION_RATE = 0.015; //uniform mutation
+    private double MUTATION_RATE = 0.04; //uniform mutation
 
     //true if first time running, false if you already have an population
     //from previous run
@@ -36,7 +33,7 @@ public class GeneticAlgorithm {
      * 
      * @return fittest in the tournament
      */
-    public Individual select(Population population) {
+    public Individual selectAndCrossover(Population population) {
         //Create a new tournament population and fill it with random Individual from population
         Population tournament = new Population(TOURNAMENT_SIZE);
 
@@ -44,31 +41,23 @@ public class GeneticAlgorithm {
             int rand = (int) (Math.random() * population.getSize());
             tournament.setIndividual(population.getIndividual(rand), i);
         }
+        
+        Individual first = tournament.getFittest();
+        int a = first.getFitness();
+        Individual second = tournament.getSecondFittest();
+        int b = second.getFitness();
+        
+        Individual child = new Individual();
+        
+        double x;
+        for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
+            x = (a * first.getWeight(i) + b * second.getWeight(i)) / (a+b);
+            child.setWeight(i, x);
+        }
+        child.setWeight(5, 99999);
 
         //return the fittest in the tournament
-        return tournament.getFittest();        
-    }
-
-    /**
-     * Uniform cross-over scheme to cross the features between 2 individuals
-     * However, WE DO NOT CARE about isLost() (last heuristic).
-     * 
-     * @param first - Individual
-     * @param second - Individual
-     */
-    public void crossOver(Individual first, Individual second) {
-
-        if (Math.random() <= CROSSOVER_RATE) {
-            //loop through heuristic features, ignore last one
-            for (int i = 0; i < PlayerSkeleton.NUM_OF_HEURISTICS-1; i++) {
-                //uniform cross-over, swap 2 weights
-                if (Math.random() <= UNIFORM_RATE) {
-                    double temp = first.getWeight(i);
-                    first.setWeight(i, second.getWeight(i));
-                    second.setWeight(i, temp);                
-                }
-            }
-        }
+        return child;        
     }
 
     /**
@@ -112,36 +101,21 @@ public class GeneticAlgorithm {
         Population nextPopulation = new Population(size);
 
         //select and crossover then put them in nextPopulation (first 40)
-        for (int i = 0; i < CITIZENS; i+=2) {
-            Individual first = new Individual();
-            first = first.replicate(select(population));
-
-            Individual second = new Individual();
-            second = second.replicate(select(population));
-
-            crossOver(first, second);
-            nextPopulation.setIndividual(first, i);
-            nextPopulation.setIndividual(second, i+1);
-        }
-
-        //mutation process, we don't mutate foreigners and elites
         for (int i = 0; i < CITIZENS; i++) {
-            mutate(nextPopulation.getIndividual(i));
-        }
-
-        //foreigners
-        for (int i = CITIZENS; i < CITIZENS + FOREIGNERS; i++) {
-            Individual newGuy = new Individual();
-            nextPopulation.setIndividual(newGuy.generateRandom(), i);
+            Individual individual = new Individual();
+            individual = selectAndCrossover(population);
+            //mutation
+            mutate(individual);
+            
+            nextPopulation.setIndividual(individual, i);
         }
 
         //elites
         population.sort();
-        for (int i = CITIZENS + FOREIGNERS; i < size; i++) {
+        for (int i = CITIZENS; i < size; i++) {
             nextPopulation.setIndividual(population.getIndividual(i), i);
         }
-
-        nextPopulation.reset();        
+        
         return nextPopulation;
     }
 
@@ -167,7 +141,7 @@ public class GeneticAlgorithm {
             round++;
             System.out.println("Round " + round + ": The fittest is ");
             
-            assert(CITIZENS+FOREIGNERS+ELITES == POPULATION_SIZE);
+            assert(CITIZENS+ELITES == POPULATION_SIZE);
             
             population = getNextGeneration(population);
             System.out.println(population.getFittest());
@@ -176,9 +150,9 @@ public class GeneticAlgorithm {
 
             //export to file every 10 rounds, so we can resume later if needed
             //can change the frequency
-            if (round % 10 == 0) {
+            //if (round % 10 == 0) {
                 population.exportToFile("data" + round + ".txt");
-            }
+            //}
         }
 
         final long endTime = System.currentTimeMillis();

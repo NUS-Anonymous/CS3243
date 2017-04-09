@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class Population {
 
     //population size
-    private static final int POPULATION_SIZE = 100;
+    private static final int POPULATION_SIZE = 200;
     
     //Arrays of Individuals
     private Individual[] population;
@@ -50,7 +50,7 @@ public class Population {
      */
     public Individual getFittest() {
         Individual fittest = population[0];
-        int length = population.length; //cannot assume to be 50.
+        int length = population.length; 
               
         Thread[] threads = new Thread[length];
         
@@ -77,6 +77,50 @@ public class Population {
         }
         
         return fittest;
+    }
+    
+    /**
+     * Get the most fit individual
+     * 1. Get fitness for each individual
+     * 2. Return the 2nd fittest individual (highest score)
+     * 
+     * We can use multi-threads to play all the games.
+     * @return
+     */
+    public Individual getSecondFittest() {
+        Individual best = population[0];
+        Individual second = population[0];
+        
+        int length = population.length; 
+              
+        Thread[] threads = new Thread[length];
+        
+        //run all threads
+        for (int i = 0; i < length; i++) {
+            threads[i] = new Thread(population[i]);
+            threads[i].start();
+        }
+        
+        //wait for all threads to finish
+        for (int i = 0; i < length; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        //get fittest individual
+        for (int i = 0; i < length; i++) {
+            if (population[i].getFitness() > best.getFitness()){
+                second = best;
+                best = population[i];
+            } else if (population[i].getFitness() > second.getFitness()) {
+                second = population[2];
+            }
+        }
+        
+        return second;
     }
     
     /**

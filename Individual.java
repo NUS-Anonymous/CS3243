@@ -48,7 +48,7 @@ public class Individual implements Runnable, Comparable<Individual> {
             }
             weight[i] = value;
         }
-        weight[size-1] = 5000;
+        weight[size-1] = 99999;
         player = new PlayerSkeleton();
         player.setWeightVector(weight);
         return random;
@@ -81,11 +81,13 @@ public class Individual implements Runnable, Comparable<Individual> {
      * @return fitness of the individual
      */
     public int getFitness() {
-        if (player == null || fitness == -1) { //if the game has not been played, play it
+        if (player == null || fitness == -1) { //if the game has not been played, play it 20 times
             player = new PlayerSkeleton();
             player.setWeightVector(weight);
-            fitness += player.run();
-
+            fitness = 0 ;
+            for (int i = 0; i < 10; i++) {
+                fitness += player.run500();
+            }
         } 
         return fitness;
     }
