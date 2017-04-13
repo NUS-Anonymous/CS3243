@@ -48,7 +48,7 @@ public class Individual implements Runnable, Comparable<Individual> {
             }
             weight[i] = value;
         }
-        weight[size-1] = 5000;
+        weight[size-1] = 999999;
         player = new PlayerSkeleton();
         player.setWeightVector(weight);
         return random;

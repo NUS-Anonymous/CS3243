@@ -14,15 +14,15 @@ public class GeneticAlgorithm {
 
     //GA parameters
 
-    private int POPULATION_SIZE = 100;
-    private int CITIZENS = 100;          //number of normal citizens
+    private int POPULATION_SIZE = 200;
+    private int CITIZENS = 200;          //number of normal citizens
     private int FOREIGNERS = 0;         //number of foreigners
     private int ELITES = 0;             //number of elites  
-    private int TOURNAMENT_SIZE = 3; 
+    private int TOURNAMENT_SIZE = 10; 
 
     private double CROSSOVER_RATE = 0.65; //crossover rate
     private double UNIFORM_RATE = 0.5; //uniform crossover
-    private double MUTATION_RATE = 0.015; //uniform mutation
+    private double MUTATION_RATE = 0.01; //uniform mutation
 
     //true if first time running, false if you already have an population
     //from previous run
@@ -132,7 +132,8 @@ public class GeneticAlgorithm {
         //foreigners
         for (int i = CITIZENS; i < CITIZENS + FOREIGNERS; i++) {
             Individual newGuy = new Individual();
-            nextPopulation.setIndividual(newGuy.generateRandom(), i);
+            newGuy.generateRandom();
+            nextPopulation.setIndividual(newGuy, i);
         }
 
         //elites
@@ -163,7 +164,7 @@ public class GeneticAlgorithm {
         int round = 0;
         final long startTime = System.currentTimeMillis();
         //run until the fittest in the generation clear 10 million points
-        while (population.getFittest().getFitness() < 10000000) {
+        while (population.getFittest().getFitness() < 1000000) {
             round++;
             System.out.println("Round " + round + ": The fittest is ");
             
@@ -174,6 +175,37 @@ public class GeneticAlgorithm {
             System.out.println(population.getFittest().getFitness());
             System.out.println();
 
+            if (round == 5) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            } else if (round == 10) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            } else if (round == 15) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            } else if (round == 20) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            } else if (round == 25) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            } else if (round == 30) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            } else if (round == 35) { 
+                MUTATION_RATE += 0.005;
+                CITIZENS -= 10;
+                FOREIGNERS += 10;
+            }
+            
+            
             //export to file every 10 rounds, so we can resume later if needed
             //can change the frequency
             if (round % 10 == 0) {
