@@ -2,7 +2,7 @@
 public class PlayerSkeleton {
 
     //switch to true to learn, false to run the game
-    private static boolean isLearning = true;
+    private static boolean isLearning = false;
 
     /**
      * The heuristic features
@@ -19,7 +19,12 @@ public class PlayerSkeleton {
 
     //the linear weight for each feature, set others to 0 to test the correctness
     //numbers or rows cleared should have negative weights, cuz we want to award this
-    public double[] weight = {0.510066, -0.76066, 0.35663, 0.184483,  0.13123, 10000};
+    public double[] weight = {0.1598390901697,
+            -13.04751328445677,
+            86.34224744079854,
+            13.742605537697884,
+            20.13035165639796,
+            999999.0};
 
     /**
      * Set the weight vector for the player
@@ -106,17 +111,17 @@ public class PlayerSkeleton {
             GA.learn();
         } else {
             State s = new State();
-//          new TFrame(s);
+            new TFrame(s);
             PlayerSkeleton p = new PlayerSkeleton();
             while(!s.hasLost()) {
                 s.makeMove(p.pickMove(s,s.legalMoves()));
-//                s.draw();
-//                s.drawNext(0,0);
-//                try {
-//                    Thread.sleep(300);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                s.draw();
+                s.drawNext(0,0);
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             System.out.println("You have completed "+s.getRowsCleared()+" rows.");
         }	
